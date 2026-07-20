@@ -36,9 +36,9 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
     df.write_parquet(config.SILVER_FILE)
 
     return df
-    ## raise NotImplementedError("Завдання 2: реалізуйте silver згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 2: реалізуйте silver згідно з CONTRACTS.md")
 
 
 def write_silver_partitioned(silver: pl.DataFrame) -> None:
     silver.write_parquet(config.SILVER_PARTITIONED_DIR, partition_by="event_type")
-    ## raise NotImplementedError("Завдання 3: запишіть партиціонований silver за event_type")
+    # raise NotImplementedError("Завдання 3: запишіть партиціонований silver за event_type")

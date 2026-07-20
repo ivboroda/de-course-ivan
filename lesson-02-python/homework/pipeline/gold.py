@@ -32,7 +32,7 @@ def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
     df.write_parquet(config.GOLD_REPO_ACTIVITY)
 
     return df
-    ## raise NotImplementedError("Завдання 4: реалізуйте repo_activity згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 4: реалізуйте repo_activity згідно з CONTRACTS.md")
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
@@ -47,7 +47,7 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
     df.write_parquet(config.GOLD_ACTIVITY_PER_MINUTE)
 
     return df
-    ## raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
@@ -64,4 +64,4 @@ def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
     df.write_parquet(config.GOLD_PUSH_COMMITS)
 
     return df
-    ## raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")

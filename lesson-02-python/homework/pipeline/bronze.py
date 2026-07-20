@@ -53,4 +53,4 @@ def build_bronze() -> pl.DataFrame:
 
     return df
 
-    ## raise NotImplementedError("Завдання 1: реалізуйте bronze згідно з CONTRACTS.md")
+    # raise NotImplementedError("Завдання 1: реалізуйте bronze згідно з CONTRACTS.md")

@@ -1,0 +1,66 @@
+[0m15:44:13  Running with dbt=1.11.12
+[0m15:44:13  Registered adapter: duckdb=1.10.1
+[0m15:44:14  Found 8 models, 17 data tests, 2 seeds, 485 macros
+[0m15:44:14  
+[0m15:44:14  Concurrency: 4 threads (target='dev')
+[0m15:44:14  
+[0m15:44:14  1 of 27 START sql view model main.stg_events ................................... [RUN]
+[0m15:44:14  2 of 27 START seed file main.calendar .......................................... [RUN]
+[0m15:44:14  3 of 27 START seed file main.event_categories .................................. [RUN]
+[0m15:44:14  3 of 27 OK loaded seed file main.event_categories .............................. [[32mINSERT 5[0m in 0.24s]
+[0m15:44:14  1 of 27 OK created sql view model main.stg_events .............................. [[32mOK[0m in 0.27s]
+[0m15:44:14  4 of 27 START test accepted_values_stg_events_event_type__PushEvent__IssuesEvent__PullRequestEvent__WatchEvent__IssueCommentEvent  [RUN]
+[0m15:44:14  5 of 27 START test assert_stg_events_clean ..................................... [RUN]
+[0m15:44:14  6 of 27 START test not_null_stg_events_id ...................................... [RUN]
+[0m15:44:14  2 of 27 OK loaded seed file main.calendar ...................................... [[32mINSERT 14[0m in 0.28s]
+[0m15:44:14  7 of 27 START test unique_stg_events_id ........................................ [RUN]
+[0m15:44:14  4 of 27 PASS accepted_values_stg_events_event_type__PushEvent__IssuesEvent__PullRequestEvent__WatchEvent__IssueCommentEvent  [[32mPASS[0m in 0.31s]
+[0m15:44:14  5 of 27 PASS assert_stg_events_clean ........................................... [[32mPASS[0m in 0.31s]
+[0m15:44:14  6 of 27 PASS not_null_stg_events_id ............................................ [[32mPASS[0m in 0.32s]
+[0m15:44:14  7 of 27 PASS unique_stg_events_id .............................................. [[32mPASS[0m in 0.15s]
+[0m15:44:14  8 of 27 START sql view model main.daily_activity ............................... [RUN]
+[0m15:44:14  9 of 27 START sql view model main.daily_activity_change ........................ [RUN]
+[0m15:44:14  10 of 27 START sql view model main.mart_category_daily ......................... [RUN]
+[0m15:44:14  11 of 27 START sql view model main.repo_top_events ............................. [RUN]
+[0m15:44:15  8 of 27 OK created sql view model main.daily_activity .......................... [[32mOK[0m in 0.20s]
+[0m15:44:15  10 of 27 OK created sql view model main.mart_category_daily .................... [[32mOK[0m in 0.19s]
+[0m15:44:15  12 of 27 START sql view model main.report_category_week ........................ [RUN]
+[0m15:44:15  11 of 27 OK created sql view model main.repo_top_events ........................ [[32mOK[0m in 0.19s]
+[0m15:44:15  13 of 27 START sql view model main.report_category_week_naive .................. [RUN]
+[0m15:44:15  9 of 27 OK created sql view model main.daily_activity_change ................... [[32mOK[0m in 0.22s]
+[0m15:44:15  14 of 27 START sql view model main.starred_repos_without_push .................. [RUN]
+[0m15:44:15  15 of 27 START test assert_running_events_monotonic ............................ [RUN]
+[0m15:44:15  15 of 27 PASS assert_running_events_monotonic .................................. [[32mPASS[0m in 0.12s]
+[0m15:44:15  16 of 27 START test not_null_daily_activity_event_date ......................... [RUN]
+[0m15:44:15  13 of 27 OK created sql view model main.report_category_week_naive ............. [[32mOK[0m in 0.20s]
+[0m15:44:15  12 of 27 OK created sql view model main.report_category_week ................... [[32mOK[0m in 0.22s]
+[0m15:44:15  17 of 27 START test unique_daily_activity_event_date ........................... [RUN]
+[0m15:44:15  18 of 27 START test not_null_mart_category_daily_events ........................ [RUN]
+[0m15:44:15  14 of 27 OK created sql view model main.starred_repos_without_push ............. [[32mOK[0m in 0.22s]
+[0m15:44:15  19 of 27 START test accepted_values_repo_top_events_type_rank__1__2__3__4__5 ... [RUN]
+[0m15:44:15  16 of 27 PASS not_null_daily_activity_event_date ............................... [[32mPASS[0m in 0.17s]
+[0m15:44:15  20 of 27 START test not_null_repo_top_events_event_count ....................... [RUN]
+[0m15:44:15  17 of 27 PASS unique_daily_activity_event_date ................................. [[32mPASS[0m in 0.13s]
+[0m15:44:15  21 of 27 START test not_null_daily_activity_change_event_date .................. [RUN]
+[0m15:44:15  18 of 27 PASS not_null_mart_category_daily_events .............................. [[32mPASS[0m in 0.21s]
+[0m15:44:15  22 of 27 START test unique_daily_activity_change_event_date .................... [RUN]
+[0m15:44:15  19 of 27 PASS accepted_values_repo_top_events_type_rank__1__2__3__4__5 ......... [[32mPASS[0m in 0.21s]
+[0m15:44:15  23 of 27 START test assert_report_matches_naive ................................ [RUN]
+[0m15:44:15  21 of 27 PASS not_null_daily_activity_change_event_date ........................ [[32mPASS[0m in 0.16s]
+[0m15:44:15  20 of 27 PASS not_null_repo_top_events_event_count ............................. [[32mPASS[0m in 0.20s]
+[0m15:44:15  24 of 27 START test not_null_report_category_week_events ....................... [RUN]
+[0m15:44:15  25 of 27 START test assert_starred_repos_without_push_correct .................. [RUN]
+[0m15:44:15  22 of 27 PASS unique_daily_activity_change_event_date .......................... [[32mPASS[0m in 0.18s]
+[0m15:44:15  26 of 27 START test not_null_starred_repos_without_push_repo_name .............. [RUN]
+[0m15:44:15  23 of 27 PASS assert_report_matches_naive ...................................... [[32mPASS[0m in 0.17s]
+[0m15:44:15  27 of 27 START test unique_starred_repos_without_push_repo_name ................ [RUN]
+[0m15:44:15  24 of 27 PASS not_null_report_category_week_events ............................. [[32mPASS[0m in 0.15s]
+[0m15:44:15  25 of 27 PASS assert_starred_repos_without_push_correct ........................ [[32mPASS[0m in 0.20s]
+[0m15:44:16  26 of 27 PASS not_null_starred_repos_without_push_repo_name .................... [[32mPASS[0m in 0.15s]
+[0m15:44:16  27 of 27 PASS unique_starred_repos_without_push_repo_name ...................... [[32mPASS[0m in 0.14s]
+[0m15:44:16  
+[0m15:44:16  Finished running 2 seeds, 17 data tests, 8 view models in 0 hours 0 minutes and 1.98 seconds (1.98s).
+[0m15:44:16  
+[0m15:44:16  [32mCompleted successfully[0m
+[0m15:44:16  
+[0m15:44:16  Done. PASS=27 WARN=0 ERROR=0 SKIP=0 NO-OP=0 TOTAL=27

@@ -13,7 +13,6 @@ TODO (Завдання 4, 5, 6): реалізуйте три функції ни
 from __future__ import annotations
 
 import polars as pl
-import os
 
 from . import config
 
@@ -28,11 +27,9 @@ def build_repo_activity(silver: pl.DataFrame) -> pl.DataFrame:
         .sort("event_count", descending=True)
     )
 
-    os.makedirs(os.path.dirname(config.GOLD_REPO_ACTIVITY), exist_ok=True)
-    df.write_parquet(config.GOLD_REPO_ACTIVITY)
+    df.write_parquet(config.GOLD_REPO_ACTIVITY, mkdir=True)
 
     return df
-    # raise NotImplementedError("Завдання 4: реалізуйте repo_activity згідно з CONTRACTS.md")
 
 
 def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
@@ -43,11 +40,9 @@ def build_activity_per_minute(silver: pl.DataFrame) -> pl.DataFrame:
         .sort("minute")
     )
 
-    os.makedirs(os.path.dirname(config.GOLD_ACTIVITY_PER_MINUTE), exist_ok=True)
-    df.write_parquet(config.GOLD_ACTIVITY_PER_MINUTE)
+    df.write_parquet(config.GOLD_ACTIVITY_PER_MINUTE, mkdir=True)
 
     return df
-    # raise NotImplementedError("Завдання 5: реалізуйте activity_per_minute згідно з CONTRACTS.md")
 
 
 def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
@@ -60,8 +55,7 @@ def build_push_commits_by_repo(silver: pl.DataFrame) -> pl.DataFrame:
         )
     )
 
-    os.makedirs(os.path.dirname(config.GOLD_PUSH_COMMITS), exist_ok=True)
-    df.write_parquet(config.GOLD_PUSH_COMMITS)
+    df.write_parquet(config.GOLD_PUSH_COMMITS, mkdir=True)
 
     return df
-    # raise NotImplementedError("Завдання 6: реалізуйте push_commits_by_repo згідно з CONTRACTS.md")
+

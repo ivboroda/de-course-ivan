@@ -18,7 +18,6 @@ write_silver_partitioned():
 from __future__ import annotations
 
 import polars as pl
-import os
 
 from . import config
 
@@ -32,13 +31,11 @@ def build_silver(bronze: pl.DataFrame) -> pl.DataFrame:
         & pl.col("created_at").is_not_null()
     ).unique(subset=["event_id"])
 
-    os.makedirs(os.path.dirname(config.SILVER_FILE), exist_ok=True)
-    df.write_parquet(config.SILVER_FILE)
+    df.write_parquet(config.SILVER_FILE, mkdir=True)
 
     return df
-    # raise NotImplementedError("Завдання 2: реалізуйте silver згідно з CONTRACTS.md")
 
 
 def write_silver_partitioned(silver: pl.DataFrame) -> None:
-    silver.write_parquet(config.SILVER_PARTITIONED_DIR, partition_by="event_type")
-    # raise NotImplementedError("Завдання 3: запишіть партиціонований silver за event_type")
+    silver.write_parquet(config.SILVER_PARTITIONED_DIR, partition_by="event_type", mkdir=True)
+

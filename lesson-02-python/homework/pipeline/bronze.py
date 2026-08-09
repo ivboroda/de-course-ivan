@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import polars as pl
 import sys
-import os
 
 from . import config
 
@@ -48,9 +47,7 @@ def build_bronze() -> pl.DataFrame:
 
     df = lf.collect()
 
-    os.makedirs(os.path.dirname(config.BRONZE_FILE), exist_ok=True)
-    df.write_parquet(config.BRONZE_FILE)
+    df.write_parquet(config.BRONZE_FILE, mkdir=True)
 
     return df
 
-    # raise NotImplementedError("Завдання 1: реалізуйте bronze згідно з CONTRACTS.md")

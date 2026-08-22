@@ -1,0 +1,198 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+26/08/22 14:59:45 WARN Utils: Your hostname, MyDell5590, resolves to a loopback address: 127.0.1.1; using 172.31.173.68 instead (on interface eth0)
+26/08/22 14:59:45 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/08/22 14:59:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 0:>                                                          (0 + 3) / 3][Stage 0:===================>                                       (1 + 2) / 3][Stage 2:>                                                          (0 + 4) / 4]                                                                                === EXPLAIN (formatted) ===
+== Physical Plan ==
+AdaptiveSparkPlan (31)
++- HashAggregate (30)
+   +- Exchange (29)
+      +- HashAggregate (28)
+         +- HashAggregate (27)
+            +- Exchange (26)
+               +- HashAggregate (25)
+                  +- Project (24)
+                     +- Generate (23)
+                        +- InMemoryTableScan (1)
+                              +- InMemoryRelation (2)
+                                    +- AdaptiveSparkPlan (22)
+                                       +- == Final Plan ==
+                                          ResultQueryStage (13)
+                                          +- * Project (12)
+                                             +- SortAggregate (11)
+                                                +- * Sort (10)
+                                                   +- ShuffleQueryStage (9), Statistics(sizeInBytes=4.9 MiB, rowCount=2.98E+4)
+                                                      +- Exchange (8)
+                                                         +- SortAggregate (7)
+                                                            +- * Sort (6)
+                                                               +- * Project (5)
+                                                                  +- * Filter (4)
+                                                                     +- Scan json  (3)
+                                       +- == Initial Plan ==
+                                          Project (21)
+                                          +- SortAggregate (20)
+                                             +- Sort (19)
+                                                +- Exchange (18)
+                                                   +- SortAggregate (17)
+                                                      +- Sort (16)
+                                                         +- Project (15)
+                                                            +- Filter (14)
+                                                               +- Scan json  (3)
+
+
+(1) InMemoryTableScan
+Output [5]: [event_type#7, actor_login#8, repo_name#9, repo_owner#14, hour#16]
+Arguments: [event_type#7, actor_login#8, repo_name#9, repo_owner#14, hour#16]
+
+(2) InMemoryRelation
+Arguments: [event_id#6, event_type#7, actor_login#8, repo_name#9, public#4, created_at#10, repo_owner#14, is_bot#15, hour#16], StorageLevel(disk, memory, deserialized, 1 replicas)
+
+(3) Scan json 
+Output [6]: [id#0, type#1, actor#2, repo#3, public#4, created_at#5]
+Batched: false
+Location: InMemoryFileIndex [file:/home/ivan/Projects/PythonCourse/UA_DATA-ENGINEERING_KHOROSHYKH-2-hw/lesson-12-spark-structured-data-1/homework/data/landing/2024-01-15-12.json.gz, ... 2 entries]
+PushedFilters: [IsNotNull(public), IsNotNull(created_at), In(type, [IssueCommentEvent,IssuesEvent,PullRequestEvent,PushEvent,WatchEvent]), EqualTo(public,true), IsNotNull(id)]
+ReadSchema: struct<id:string,type:string,actor:struct<login:string>,repo:struct<name:string>,public:boolean,created_at:string>
+
+(4) Filter [codegen id : 1]
+Input [6]: [id#0, type#1, actor#2, repo#3, public#4, created_at#5]
+Condition : ((((((isnotnull(public#4) AND isnotnull(created_at#5)) AND type#1 IN (PushEvent,PullRequestEvent,IssuesEvent,WatchEvent,IssueCommentEvent)) AND public#4) AND isnotnull(id#0)) AND isnotnull(repo#3.name)) AND isnotnull(cast(created_at#5 as timestamp)))
+
+(5) Project [codegen id : 1]
+Output [6]: [id#0 AS event_id#6, type#1 AS event_type#7, actor#2.login AS actor_login#8, repo#3.name AS repo_name#9, public#4, cast(created_at#5 as timestamp) AS created_at#10]
+Input [6]: [id#0, type#1, actor#2, repo#3, public#4, created_at#5]
+
+(6) Sort [codegen id : 1]
+Input [6]: [event_id#6, event_type#7, actor_login#8, repo_name#9, public#4, created_at#10]
+Arguments: [event_id#6 ASC NULLS FIRST], false, 0
+
+(7) SortAggregate
+Input [6]: [event_id#6, event_type#7, actor_login#8, repo_name#9, public#4, created_at#10]
+Keys [1]: [event_id#6]
+Functions [5]: [partial_first(event_type#7, false), partial_first(actor_login#8, false), partial_first(repo_name#9, false), partial_first(public#4, false), partial_first(created_at#10, false)]
+Aggregate Attributes [10]: [first#27, valueSet#28, first#29, valueSet#30, first#31, valueSet#32, first#33, valueSet#34, first#35, valueSet#36]
+Results [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+
+(8) Exchange
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Arguments: hashpartitioning(event_id#6, 4), ENSURE_REQUIREMENTS, [plan_id=64]
+
+(9) ShuffleQueryStage
+Output [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Arguments: 0
+
+(10) Sort [codegen id : 2]
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Arguments: [event_id#6 ASC NULLS FIRST], false, 0
+
+(11) SortAggregate
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Keys [1]: [event_id#6]
+Functions [5]: [first(event_type#7, false), first(actor_login#8, false), first(repo_name#9, false), first(public#4, false), first(created_at#10, false)]
+Aggregate Attributes [5]: [first(event_type#7)()#17, first(actor_login#8)()#19, first(repo_name#9)()#21, first(public#4)()#23, first(created_at#10)()#25]
+Results [6]: [event_id#6, first(event_type#7)()#17 AS event_type#18, first(actor_login#8)()#19 AS actor_login#20, first(repo_name#9)()#21 AS repo_name#22, first(public#4)()#23 AS public#24, first(created_at#10)()#25 AS created_at#26]
+
+(12) Project [codegen id : 3]
+Output [9]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26, split(repo_name#22, /, -1)[0] AS repo_owner#14, coalesce(EndsWith(actor_login#20, [bot]), false) AS is_bot#15, date_trunc(hour, created_at#26, Some(UTC)) AS hour#16]
+Input [6]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26]
+
+(13) ResultQueryStage
+Output [9]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26, repo_owner#14, is_bot#15, hour#16]
+Arguments: 1
+
+(14) Filter
+Input [6]: [id#0, type#1, actor#2, repo#3, public#4, created_at#5]
+Condition : ((((((isnotnull(public#4) AND isnotnull(created_at#5)) AND type#1 IN (PushEvent,PullRequestEvent,IssuesEvent,WatchEvent,IssueCommentEvent)) AND public#4) AND isnotnull(id#0)) AND isnotnull(repo#3.name)) AND isnotnull(cast(created_at#5 as timestamp)))
+
+(15) Project
+Output [6]: [id#0 AS event_id#6, type#1 AS event_type#7, actor#2.login AS actor_login#8, repo#3.name AS repo_name#9, public#4, cast(created_at#5 as timestamp) AS created_at#10]
+Input [6]: [id#0, type#1, actor#2, repo#3, public#4, created_at#5]
+
+(16) Sort
+Input [6]: [event_id#6, event_type#7, actor_login#8, repo_name#9, public#4, created_at#10]
+Arguments: [event_id#6 ASC NULLS FIRST], false, 0
+
+(17) SortAggregate
+Input [6]: [event_id#6, event_type#7, actor_login#8, repo_name#9, public#4, created_at#10]
+Keys [1]: [event_id#6]
+Functions [5]: [partial_first(event_type#7, false), partial_first(actor_login#8, false), partial_first(repo_name#9, false), partial_first(public#4, false), partial_first(created_at#10, false)]
+Aggregate Attributes [10]: [first#27, valueSet#28, first#29, valueSet#30, first#31, valueSet#32, first#33, valueSet#34, first#35, valueSet#36]
+Results [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+
+(18) Exchange
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Arguments: hashpartitioning(event_id#6, 4), ENSURE_REQUIREMENTS, [plan_id=22]
+
+(19) Sort
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Arguments: [event_id#6 ASC NULLS FIRST], false, 0
+
+(20) SortAggregate
+Input [11]: [event_id#6, first#37, valueSet#38, first#39, valueSet#40, first#41, valueSet#42, first#43, valueSet#44, first#45, valueSet#46]
+Keys [1]: [event_id#6]
+Functions [5]: [first(event_type#7, false), first(actor_login#8, false), first(repo_name#9, false), first(public#4, false), first(created_at#10, false)]
+Aggregate Attributes [5]: [first(event_type#7)()#17, first(actor_login#8)()#19, first(repo_name#9)()#21, first(public#4)()#23, first(created_at#10)()#25]
+Results [6]: [event_id#6, first(event_type#7)()#17 AS event_type#18, first(actor_login#8)()#19 AS actor_login#20, first(repo_name#9)()#21 AS repo_name#22, first(public#4)()#23 AS public#24, first(created_at#10)()#25 AS created_at#26]
+
+(21) Project
+Output [9]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26, split(repo_name#22, /, -1)[0] AS repo_owner#14, coalesce(EndsWith(actor_login#20, [bot]), false) AS is_bot#15, date_trunc(hour, created_at#26, Some(UTC)) AS hour#16]
+Input [6]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26]
+
+(22) AdaptiveSparkPlan
+Output [9]: [event_id#6, event_type#18, actor_login#20, repo_name#22, public#24, created_at#26, repo_owner#14, is_bot#15, hour#16]
+Arguments: isFinalPlan=true
+
+(23) Generate
+Input [5]: [event_type#7, actor_login#8, repo_name#9, repo_owner#14, hour#16]
+Arguments: explode(array(struct(dimension, event_type, dimension_value, event_type#7), struct(dimension, repo_owner, dimension_value, repo_owner#14), struct(dimension, actor_login, dimension_value, actor_login#8), struct(dimension, hour, dimension_value, cast(hour#16 as string)))), [repo_name#9], false, [pair#363]
+
+(24) Project
+Output [3]: [repo_name#9, pair#363.dimension AS _groupingexpression#474, pair#363.dimension_value AS _groupingexpression#475]
+Input [2]: [repo_name#9, pair#363]
+
+(25) HashAggregate
+Input [3]: [repo_name#9, _groupingexpression#474, _groupingexpression#475]
+Keys [3]: [_groupingexpression#474, _groupingexpression#475, repo_name#9]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count(1)#378L]
+Results [4]: [_groupingexpression#474, _groupingexpression#475, repo_name#9, count#522L]
+
+(26) Exchange
+Input [4]: [_groupingexpression#474, _groupingexpression#475, repo_name#9, count#522L]
+Arguments: hashpartitioning(_groupingexpression#474, _groupingexpression#475, repo_name#9, 4), ENSURE_REQUIREMENTS, [plan_id=144]
+
+(27) HashAggregate
+Input [4]: [_groupingexpression#474, _groupingexpression#475, repo_name#9, count#522L]
+Keys [3]: [_groupingexpression#474, _groupingexpression#475, repo_name#9]
+Functions [1]: [merge_count(1)]
+Aggregate Attributes [1]: [count(1)#378L]
+Results [4]: [_groupingexpression#474, _groupingexpression#475, repo_name#9, count#522L]
+
+(28) HashAggregate
+Input [4]: [_groupingexpression#474, _groupingexpression#475, repo_name#9, count#522L]
+Keys [2]: [_groupingexpression#474, _groupingexpression#475]
+Functions [2]: [merge_count(1), partial_count(distinct repo_name#9)]
+Aggregate Attributes [2]: [count(1)#378L, count(repo_name#9)#383L]
+Results [4]: [_groupingexpression#474, _groupingexpression#475, count#522L, count#525L]
+
+(29) Exchange
+Input [4]: [_groupingexpression#474, _groupingexpression#475, count#522L, count#525L]
+Arguments: hashpartitioning(_groupingexpression#474, _groupingexpression#475, 4), ENSURE_REQUIREMENTS, [plan_id=148]
+
+(30) HashAggregate
+Input [4]: [_groupingexpression#474, _groupingexpression#475, count#522L, count#525L]
+Keys [2]: [_groupingexpression#474, _groupingexpression#475]
+Functions [2]: [count(1), count(distinct repo_name#9)]
+Aggregate Attributes [2]: [count(1)#378L, count(repo_name#9)#383L]
+Results [4]: [_groupingexpression#474 AS dimension#364, _groupingexpression#475 AS dimension_value#365, count(1)#378L AS events#366L, count(repo_name#9)#383L AS distinct_repos#367L]
+
+(31) AdaptiveSparkPlan
+Output [4]: [dimension#364, dimension_value#365, events#366L, distinct_repos#367L]
+Arguments: isFinalPlan=false
+
+[Stage 9:==============>                                            (1 + 3) / 4]                                                                                
+rows=25102, elapsed=1.59s

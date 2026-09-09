@@ -6,27 +6,65 @@
 --          review_comments, author_association, label_names, last_action, last_event_at, churn, hours_open
 
 -- TODO: замініть заглушку на запит згідно зі SPEC.md
+with pr_events as (
+    select
+        event_id,
+        repo_name,
+        created_at as event_at,
+        from_json(payload, '{{ var("pr_schema") }}') as p
+    from {{ ref('events') }}
+    where event_type = 'PullRequestEvent'
+),
+
+flattened as (
+    select
+        event_id,
+        repo_name,
+        event_at,
+        p.action       as action,
+        p.number       as pr_number,
+        p.pull_request as pr
+    from pr_events
+),
+
+ranked as (
+    select
+        *,
+        row_number() over (
+            partition by repo_name, pr_number
+            order by event_at desc, event_id desc
+        ) as rn
+    from flattened
+),
+
+latest as (
+    select * from ranked where rn = 1
+)
+
 select
-    cast(null as string)          as repo_name,
-    cast(null as int)             as pr_number,
-    cast(null as string)          as title,
-    cast(null as string)          as author_login,
-    cast(null as string)          as state,
-    cast(null as boolean)         as is_merged,
-    cast(null as boolean)         as is_draft,
-    cast(null as timestamp)       as opened_at,
-    cast(null as timestamp)       as closed_at,
-    cast(null as timestamp)       as merged_at,
-    cast(null as int)             as additions,
-    cast(null as int)             as deletions,
-    cast(null as int)             as changed_files,
-    cast(null as int)             as commits_count,
-    cast(null as int)             as comments,
-    cast(null as int)             as review_comments,
-    cast(null as string)          as author_association,
-    cast(null as array<string>)   as label_names,
-    cast(null as string)          as last_action,
-    cast(null as timestamp)       as last_event_at,
-    cast(null as int)             as churn,
-    cast(null as double)          as hours_open
-where false
+    repo_name,
+    pr_number,
+    pr.title                    as title,
+    pr.user.login                as author_login,
+    pr.state                     as state,
+    pr.merged                    as is_merged,
+    pr.draft                     as is_draft,
+    to_timestamp(pr.created_at)  as opened_at,
+    to_timestamp(pr.closed_at)   as closed_at,
+    to_timestamp(pr.merged_at)   as merged_at,
+    pr.additions                 as additions,
+    pr.deletions                 as deletions,
+    pr.changed_files             as changed_files,
+    pr.commits                   as commits_count,
+    pr.comments                  as comments,
+    pr.review_comments           as review_comments,
+    pr.author_association        as author_association,
+    pr.labels.name                as label_names,
+    action                        as last_action,
+    event_at                      as last_event_at,
+    pr.additions + pr.deletions   as churn,
+    (
+        cast(coalesce(to_timestamp(pr.closed_at), event_at) as double)
+        - cast(to_timestamp(pr.created_at) as double)
+    ) / 3600 as hours_open
+from latest
